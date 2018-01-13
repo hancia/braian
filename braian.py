@@ -14,10 +14,14 @@ class Braian(object):
     def _best_intent(self,answer):
         return answer['topScoringIntent']['intent']
 
+    def _serve_message(self, answer):
+        intent = self._best_intent(answer)
+
     def run(self):
         while(1):
             input_message = input()
             answer = self._get_request(input_message)
+            self._serve_message(answer)
             print(self._best_intent(answer))
 
 
