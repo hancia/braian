@@ -53,7 +53,7 @@ class Braian(object):
         self.say("Today its {} degrees and the wind speed is {} kilometers per hour".format(temp,wind))
 
     def _none_message(self, answer):
-        self.say("I don't understand, please try again")
+        self.say("Hi, how can i help you?")
 
     def _signal_message(self, answer):
         self.say("Sending SOS message to the number: {}".format(self.contactnumber))
