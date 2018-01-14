@@ -1,5 +1,6 @@
 import requests
-
+from Calendar import Calendar
+from event import Event
 class Braian(object):
 
     def __init__(self):
@@ -26,9 +27,11 @@ class Braian(object):
             self._calendaradd(answer)
         else:
             print("No idea :/")
+
         drug_list = self.calendar.current_event()
+
         for i in drug_list:
-            print("Please take",i," now")
+            print("Please take",i.text," now")
 
     def _none_message(self, answer):
         print("I don't understand, please try again")
@@ -37,20 +40,28 @@ class Braian(object):
         print("Sending SOS message to the number: ",self.contactnumber)
 
     def _calendaradd(self, answer):
-        for i in answer['entities']:
-            if i['type'] == 'time':
-                time = i['entity']
-            elif i['type'] == "drug":
-                drug = i["entity"]
-            elif i["type"] == "day":
-                day = i["entity"]
-        event = Event(drug,day,time)
-        calendar.add_event(event)
+        try:
+            for i in answer['entities']:
+                type = str(i['type'])
+                if type == 'time':
+                    time = i['entity']
+                elif type == "drug":
+                    drug = i["entity"]
+                elif type == "day":
+                    day = i["entity"]
+                elif type == "minutes":
+                    minutes = i["entity"]
+
+            event = Event(drug,day,time,minutes)
+            self.calendar.add_event(event)
+            print("I added your reminder")
+        except:
+            print("Blad wiadomosci")
 
 
     def run(self):
+        print("Hi, how can I help you?")
         while(1):
             input_message = input()
             answer = self._get_request(input_message)
             self._serve_message(answer)
-            print(self._best_intent(answer))
