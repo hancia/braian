@@ -7,7 +7,7 @@ class Braian(object):
 
     def __init__(self):
         self.engine = pyttsx3.init()
-        self.engine.setProperty('rate',120)
+        self.engine.setProperty('rate',130)
         self.engine.setProperty('volume',0.9)
 
         self.contactnumber=610890608
@@ -57,7 +57,7 @@ class Braian(object):
         self.say("I don't understand, please try again")
 
     def _signal_message(self, answer):
-        self.say("Sending SOS message to the number: ",self.contactnumber)
+        self.say("Sending SOS message to the number: {}".format(self.contactnumber))
 
     def _calendaradd(self, answer):
         try:
@@ -80,8 +80,8 @@ class Braian(object):
 
 
     def run(self):
+        self.say("Hi, How can I help you my friend?")
         while(1):
-            self.say("Hi")
             input_message = input()
             answer = self._get_request(input_message)
             self._serve_message(answer)
