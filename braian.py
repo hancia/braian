@@ -42,7 +42,6 @@ class Braian(object):
             self.say("No idea")
 
         drug_list = self.calendar.current_event()
-
         for i in drug_list:
             self.say("Please take {} now".format(i.text))
 
