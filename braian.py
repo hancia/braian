@@ -1,12 +1,23 @@
 import requests
 from Calendar import Calendar
 from event import Event
+import pyttsx3
+
 class Braian(object):
 
     def __init__(self):
+        self.engine = pyttsx3.init()
+        self.engine.setProperty('rate',120)
+        self.engine.setProperty('volume',0.9)
+
         self.contactnumber=610890608
         self.BASE_PATH = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/da417be9-5a0f-4e02-972a-d16c59ee77f8?subscription-key=855fe00606ef48ecb4dafc6a30b92845&verbose=true&timezoneOffset=0&q="
         self.calendar = Calendar()
+
+    def say(self, text):
+        self.engine.say(text)
+        print(text)
+        self.engine.runAndWait()
 
     def _replace(self,a):
         return a.replace(' ',"%20")
@@ -25,19 +36,28 @@ class Braian(object):
             self._none_message(answer)
         elif intent == "Calendar.Add":
             self._calendaradd(answer)
+        elif intent == "Weather":
+            self._checkweather(answer)
         else:
-            print("No idea :/")
+            self.say("No idea")
 
         drug_list = self.calendar.current_event()
 
         for i in drug_list:
-            print("Please take",i.text," now")
+            self.say("Please take {} now".format(i.text))
+
+
+    def _checkweather(self,answer):
+        weather = requests.get('http://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22').json()
+        temp=str(int(weather['main']['temp'])-273)
+        wind=weather['wind']['speed']
+        self.say("Today its {} degrees and the wind speed is {} kilometers per hour".format(temp,wind))
 
     def _none_message(self, answer):
-        print("I don't understand, please try again")
+        self.say("I don't understand, please try again")
 
     def _signal_message(self, answer):
-        print("Sending SOS message to the number: ",self.contactnumber)
+        self.say("Sending SOS message to the number: ",self.contactnumber)
 
     def _calendaradd(self, answer):
         try:
@@ -54,14 +74,14 @@ class Braian(object):
 
             event = Event(drug,day,time,minutes)
             self.calendar.add_event(event)
-            print("I added your reminder")
+            self.say("I added your reminder")
         except:
-            print("Blad wiadomosci")
+            self.say("Bad message")
 
 
     def run(self):
-        print("Hi, how can I help you?")
         while(1):
+            self.say("Hi")
             input_message = input()
             answer = self._get_request(input_message)
             self._serve_message(answer)
