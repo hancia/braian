@@ -5,6 +5,7 @@ class Braian(object):
     def __init__(self):
         self.contactnumber=610890608
         self.BASE_PATH = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/da417be9-5a0f-4e02-972a-d16c59ee77f8?subscription-key=855fe00606ef48ecb4dafc6a30b92845&verbose=true&timezoneOffset=0&q="
+        self.calendar = Calendar()
 
     def _replace(self,a):
         return a.replace(' ',"%20")
@@ -25,12 +26,27 @@ class Braian(object):
             self._calendaradd(answer)
         else:
             print("No idea :/")
+        drug_list = self.calendar.current_event()
+        for i in drug_list:
+            print("Please take",i," now")
 
     def _none_message(self, answer):
         print("I don't understand, please try again")
 
     def _signal_message(self, answer):
         print("Sending SOS message to the number: ",self.contactnumber)
+
+    def _calendaradd(self, answer):
+        for i in answer['entities']:
+            if i['type'] == 'time':
+                time = i['entity']
+            elif i['type'] == "drug":
+                drug = i["entity"]
+            elif i["type"] == "day":
+                day = i["entity"]
+        event = Event(drug,day,time)
+        calendar.add_event(event)
+
 
     def run(self):
         while(1):
