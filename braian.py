@@ -3,7 +3,7 @@ import requests
 class Braian(object):
 
     def __init__(self):
-        self.contactnumber=690890608
+        self.contactnumber=610890608
         self.BASE_PATH = "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/da417be9-5a0f-4e02-972a-d16c59ee77f8?subscription-key=855fe00606ef48ecb4dafc6a30b92845&verbose=true&timezoneOffset=0&q="
 
     def _replace(self,a):
@@ -27,7 +27,7 @@ class Braian(object):
             print("No idea :/")
 
     def _none_message(self, answer):
-        printf("I don't understand, please try again")
+        print("I don't understand, please try again")
 
     def _signal_message(self, answer):
         print("Sending SOS message to the number: ",self.contactnumber)
